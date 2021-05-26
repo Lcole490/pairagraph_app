@@ -19,10 +19,7 @@ function TextEditor() {
     wrapper.append(editor);
      new Quill(editor, { theme: "snow" })
 
-        //adfadfasdfasdf
-
-        //adsfad
-        
+      
     }, [])                                         
     
 
@@ -31,7 +28,7 @@ function TextEditor() {
 
 
     return (
-        <div id = "container" ref = {wrapperRef}> 
+        <div className = "container" ref = {wrapperRef}> 
             
         </div>
     )
