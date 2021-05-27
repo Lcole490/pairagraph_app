@@ -27,6 +27,10 @@ body {
     justify-content: center;
 }
 
+.container .ql-editor.ql-blank::before{
+    display: flex;
+    justify-content: center;
+}
 
 .container .ql-toolbar.ql-snow {
     display: flex;
