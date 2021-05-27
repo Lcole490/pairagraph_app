@@ -1,6 +1,7 @@
-import React , {  useCallback }from 'react'
+import React , {  useCallback, useEffect, useState }from 'react'
 import "quill/dist/quill.snow.css"
 import Quill from "quill"
+import { io } from 'socket.io-client'
 
 
 
@@ -21,7 +22,41 @@ const TOOLBAR_OPTIONS =[
 
 
 function TextEditor() {
+    
 
+
+    const [socket, setSocket] = useState()
+    const [quill, setQuill] = useState()
+
+
+    useEffect(() =>{
+       const s = io("http://localhost:3001")        // s variable stands for socket, naming convention avoids being mistaken with socket used for state
+       setSocket(s)
+
+       return () => {
+           s.disconnect()
+       }
+    }, [])
+
+
+
+
+
+    useEffect(() => {
+
+        if (socket == null || quill == null) return
+
+            const handler =  (delta, oldDelta, source) => {
+                if (source !== 'user') return
+                socket.emit("send-changes", delta)
+            }
+
+            quill.on('text-change', handler)
+
+            return () => {
+                quill.off('text-change', handler)
+            }
+    }, [socket, quill])
 
     
 
@@ -33,8 +68,10 @@ function TextEditor() {
     wrapper.innerHTML =   "" 
     const editor = document.createElement('div')
     wrapper.append(editor);
-     new Quill(editor, { theme: "snow" , modules: {toolbar: TOOLBAR_OPTIONS}})
+    const q = new Quill(editor, { theme: "snow" , placeholder: "Pairagraph is a great peer text-editing program. Begin typing and let creativity and collaboration begin ..." , modules: {toolbar: TOOLBAR_OPTIONS},
 
+})
+        setQuill(q)
       
     }, [])                                         
     
